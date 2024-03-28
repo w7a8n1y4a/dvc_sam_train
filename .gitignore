@@ -9,7 +9,6 @@ plot
 dvc_plots
 .env
 .pep8
-test.py
 .vscode
 split
 runs
