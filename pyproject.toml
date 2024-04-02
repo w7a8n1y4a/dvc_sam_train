@@ -2,7 +2,7 @@
 name = "sam-lora-poetry"
 version = "0.1.0"
 description = ""
-authors = ["WangRongsheng <wrs6@88.com>"]
+authors = ["WangRongsheng <wrs6@88.com>", "Ivan Serebrennikov <w7a8n1y4a@gmail.com>"]
 readme = "README.md"
 packages = [{include = "sam_lora_poetry"}]
 
@@ -21,8 +21,7 @@ opencv-python = "^4.8.0.76"
 pyyaml = "^6.0.1"
 gradio = "^3.44.3"
 torch = "2.0.1"
-
-
+dvc = {extras = ["s3"], version = "^3.33.3"}
 
 [build-system]
 requires = ["poetry-core"]
