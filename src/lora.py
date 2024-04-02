@@ -1,12 +1,9 @@
-from src.segment_anything import build_sam_vit_b
-from src.segment_anything.modeling.sam import Sam
+from segment_anything.modeling.sam import Sam
 
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch import Tensor
-from torch.nn.parameter import Parameter
 from safetensors import safe_open
 from safetensors.torch import save_file
 import yaml
@@ -168,6 +165,3 @@ class LoRA_sam(nn.Module):
                 saved_key = f"w_b_{i:03d}"
                 saved_tensor = f.get_tensor(saved_key)
                 w_B_linear.weight = nn.Parameter(saved_tensor)
-
-with open("./config.yaml", "r") as ymlfile:
-   config_file = yaml.load(ymlfile, Loader=yaml.Loader)

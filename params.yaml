@@ -1,0 +1,16 @@
+split:
+  test_path: 'split/test'
+  train_path: 'split/train'
+  train_size: 1
+  test_size: 1
+  shuffle_dataset: False
+  box_size: 1800
+  overlap: 0.2
+variable:
+  run_name: 'alpha'
+train:
+  epochs: 10
+  batch: 1
+  learning_rate: 0.0001
+  start_model_name: 'sam_vit_b_01ec64.pth'
+  rank: 512

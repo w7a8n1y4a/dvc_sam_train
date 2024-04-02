@@ -1,19 +1,13 @@
-import torch
 import glob
-import os 
+
+import torch
 from PIL import Image
 import numpy as np
 
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
-import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
+from torch.utils.data import Dataset
 
-from src.processor import Samprocessor
-from src.segment_anything import build_sam_vit_b, SamPredictor
-from src.lora import LoRA_sam
-import src.utils as utils
-import yaml
+from processor import Samprocessor
+from core import utils as utils
 
 
 class DatasetSegmentation(Dataset):
@@ -32,19 +26,11 @@ class DatasetSegmentation(Dataset):
             ground_truth_mask: Ground truth mask
     """
 
-    def __init__(self, config_file: dict, processor: Samprocessor, mode: str):
+    def __init__(self, processor: Samprocessor, mode: str):
         super().__init__()
-        if mode == "train":
-            self.img_files = glob.glob(os.path.join(config_file["DATASET"]["TRAIN_PATH"],'images',"*"+config_file["DATASET"]["IMAGE_FORMAT"]))
-            self.mask_files = []
-            for img_path in self.img_files:
-                self.mask_files.append(os.path.join(config_file["DATASET"]["TRAIN_PATH"],'masks', os.path.basename(img_path)[:-4] + config_file["DATASET"]["IMAGE_FORMAT"])) 
 
-        else:
-            self.img_files = glob.glob(os.path.join(config_file["DATASET"]["TEST_PATH"],'images',"*"+config_file["DATASET"]["IMAGE_FORMAT"]))
-            self.mask_files = []
-            for img_path in self.img_files:
-                self.mask_files.append(os.path.join(config_file["DATASET"]["TEST_PATH"],'masks', os.path.basename(img_path)[:-4] + config_file["DATASET"]["IMAGE_FORMAT"]))
+        self.img_files = glob.glob(f"split/{mode}/images/*.png")
+        self.mask_files = glob.glob(f"split/{mode}/masks/*.png")
 
         self.processor = processor
 
@@ -52,22 +38,23 @@ class DatasetSegmentation(Dataset):
         return len(self.img_files)
     
     def __getitem__(self, index: int) -> list:
-            img_path = self.img_files[index]
-            mask_path = self.mask_files[index]
-            # get image and mask in PIL format
-            image =  Image.open(img_path)
-            mask = Image.open(mask_path)
-            mask = mask.convert('1')
-            ground_truth_mask = np.array(mask)
-            original_size = tuple(image.size)[::-1]
+        img_path = self.img_files[index]
+        mask_path = self.mask_files[index]
+        # get image and mask in PIL format
+        image =  Image.open(img_path)
+        mask = Image.open(mask_path)
+        mask = mask.convert('1')
+        ground_truth_mask = np.array(mask)
+        original_size = tuple(image.size)[::-1]
 
-            # get bounding box prompt
-            box = utils.get_bounding_box(ground_truth_mask)
-            inputs = self.processor(image, original_size, box)
-            inputs["ground_truth_mask"] = torch.from_numpy(ground_truth_mask)
+        # get bounding box prompt
+        box = utils.get_bounding_box(ground_truth_mask)
+        inputs = self.processor(image, original_size, box)
+        inputs["ground_truth_mask"] = torch.from_numpy(ground_truth_mask)
 
-            return inputs
-    
+        return inputs
+
+
 def collate_fn(batch: torch.utils.data) -> list:
     """
     Used to get a list of dict as output when using a dataloader

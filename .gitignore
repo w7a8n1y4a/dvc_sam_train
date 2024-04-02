@@ -12,7 +12,11 @@ dvc_plots
 .vscode
 split
 runs
-yolov8*
 predict
 out.mp4
 mars-small*
+sam_vit*
+lora_rank512.safetensors
+plots
+data
+train

@@ -1,0 +1,59 @@
+stages:
+  split:
+    cmd: python src/split.py
+    deps:
+    - dataset/data
+    - src/split.py
+    params:
+    - split.test_path
+    - split.train_path
+    - split.train_size
+    - split.test_size
+    - split.box_size
+    - split.overlap
+    - split.shuffle_dataset
+    outs:
+    - split/dataset_data.json
+  train:
+    cmd: python src/train.py
+    deps:
+    - split/dataset_data.json
+    - src/train.py
+    params:
+    - train.epochs
+    - train.batch
+    - train.start_model_name
+    - variable.run_name
+    outs:
+      - model/train_data.json
+      - plot/train/loss_scores_dict.json
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - model/train_data.json
+    - src/evaluate.py
+    outs:
+    - eval/metrics.json
+  infer:
+    cmd: python src/infer.py
+    deps:
+    - model/train_data.json
+    - src/infer.py
+    outs:
+    - plot/infer/one.png
+    - plot/infer/two.png
+    - plot/infer/three.png
+metrics:
+- eval/metrics.json
+plots:
+- Main:
+    y:
+      plot/train/loss_scores_dict.json: [avg_loss, avg_iou]
+    x:
+      plot/train/loss_scores_dict.json: epoch
+    title: Avg dice loss with avg IoU confidence
+    x_label: Epochs
+    y_label: AvgDiceLoss, AvgIouConfidence
+- plot/infer/one.png
+- plot/infer/two.png
+- plot/infer/three.png
