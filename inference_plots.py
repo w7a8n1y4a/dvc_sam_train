@@ -21,7 +21,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 sam = build_sam_vit_b(checkpoint=sam_checkpoint)
 rank = 512
 sam_lora = LoRA_sam(sam, rank)
-sam_lora.load_lora_parameters(f"./lora_weights/lora_rank{rank}.safetensors")
+sam_lora.load_lora_parameters(f"./lora_rank{rank}.safetensors")
 model = sam_lora
 
 
@@ -47,7 +47,7 @@ def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, 
     predictor.set_image(np.array(image))
     masks, iou_pred, low_res_iou = predictor.predict(
         box=np.array(box),
-        multimask_output=False,
+        multimask_output=False, 
     )
 
     if mask_path == None:
@@ -84,6 +84,6 @@ def inference_model(sam_model, image_path, filename, mask_path=None, bbox=None, 
             plt.savefig(f"./plots/{filename[:-4]}_rank{rank}.jpg")
 
 
-inference_model(model, './dataset/test/images/75f8f745-8248-40e9-8095-d4c9fdc20d30_4_5.png', 'infer', mask_path='./dataset/test/masks/75f8f745-8248-40e9-8095-d4c9fdc20d30_4_5.png')
+inference_model(model, './dataset/train/images/de48222b-13a1-4310-a3c7-1e567ed639f6_0_3.png', 'infer', mask_path='./dataset/train/masks/de48222b-13a1-4310-a3c7-1e567ed639f6_0_3.png')
 
 
