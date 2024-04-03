@@ -1,0 +1,34 @@
+variables:
+  DOCKER_IMAGE_TAG: $CI_PIPELINE_IID
+  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+
+stages:
+  - build
+  - exp
+
+build:experiment:
+  stage: build
+  tags:
+    - shell-main-pc
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^exp\/.*$/ && $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: manual
+    - when: never
+  script:
+    - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+
+exp:experiment:
+  stage: exp
+  tags:
+    - shell-main-pc
+  variables:
+    PROJ: sam-train
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^exp\/.*$/ && $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: on_success
+    - when: never
+  before_script:
+    - echo $USER
+  script:
+    - docker run -it --gpus all -v /home/w7a8n1y4a/Documents/datasets/ice_edge_bachelor:/app/dataset/data -v $DVC_ENV_FILE:/app/.dvc/config.local --env-file $ENV_FILE --name $PROJ $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    - docker rm $PROJ
