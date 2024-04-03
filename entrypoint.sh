@@ -11,6 +11,7 @@ git pull
 
 git checkout $CI_COMMIT_BRANCH
 
+dvc pull
 dvc repro -f
 
 git config --global user.email "automatic@pepemoss.com"
