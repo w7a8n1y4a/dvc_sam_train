@@ -15,6 +15,8 @@ COPY poetry.lock pyproject.toml /app/
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction --no-root --no-ansi
 
+RUN git clone https://git.pepemoss.com/universitat/ml/sam_train.git
+
 COPY . .
 
 RUN chmod +x /app/entrypoint.sh
