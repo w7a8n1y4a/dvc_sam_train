@@ -1,11 +1,11 @@
 split:
   test_path: 'split/test'
   train_path: 'split/train'
-  train_size: 85
-  test_size: 15
-  shuffle_dataset: False
-  box_size: 1000
-  overlap: 0.2
+  train_size: 20
+  test_size: 2
+  shuffle_dataset: True
+  box_size: 1024
+  overlap: 0.1
 variable:
   run_name: 'alpha'
 train:
