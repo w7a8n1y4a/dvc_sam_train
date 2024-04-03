@@ -86,6 +86,8 @@ def main():
 
         utils.dict_to_log({'name': name, 'img_name': item})
 
+        utils.dict_to_log({'send_succes': str(utils.send_file_to_telegram(f"{settings.app_path}/plot/infer/{name}.png"))})
+
 
 if __name__ == "__main__":
     main()

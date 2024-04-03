@@ -90,10 +90,6 @@ def main():
         )
         mlflow.log_artifact(f'{settings.app_path}/model/best.safetensors')
 
-        # отправка файла в mfr бота файла f1_curve после теста
-        filepath_f1_curve_plot = f'{settings.app_path}/runs/detect/val/F1_curve.png'
-        dict_to_log({'send_succes': str(send_file_to_telegram(filepath_f1_curve_plot))})
-
     return True
 
 

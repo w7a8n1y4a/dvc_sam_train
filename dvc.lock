@@ -15,7 +15,7 @@ stages:
     params:
       params.yaml:
         split.box_size: 1800
-        split.overlap: 0.2
+        split.overlap: 0.1
         split.shuffle_dataset: false
         split.test_path: split/test
         split.test_size: 1
@@ -24,14 +24,14 @@ stages:
     outs:
     - path: split/dataset_data.json
       hash: md5
-      md5: e43c8dd2a907859a1231ebfffb985b20
+      md5: bf242be7127edbd0f42dbc07306e4d42
       size: 117
   train:
     cmd: python src/train.py
     deps:
     - path: split/dataset_data.json
       hash: md5
-      md5: e43c8dd2a907859a1231ebfffb985b20
+      md5: bf242be7127edbd0f42dbc07306e4d42
       size: 117
     - path: src/train.py
       hash: md5
@@ -46,49 +46,49 @@ stages:
     outs:
     - path: model/train_data.json
       hash: md5
-      md5: d3684b1ecd3c99debdea5591e99c25e2
+      md5: 162e7f9a8790d48223497e674617a319
       size: 189
     - path: plot/train/loss_scores_dict.json
       hash: md5
-      md5: 02cdb296a3f4b7aafb6f35efd27e07d3
-      size: 1073
+      md5: abca4540a2fecd9d230731c118a2a2b4
+      size: 1070
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: model/train_data.json
       hash: md5
-      md5: d3684b1ecd3c99debdea5591e99c25e2
+      md5: 21ab3af93de0eca245f24489be3c9982
       size: 189
     - path: src/evaluate.py
       hash: md5
-      md5: 82dffb0a2fcbd66595d7674cf85cd8d7
-      size: 3732
+      md5: 7adc5372d5fb4238f28b1248b0f244c4
+      size: 3461
     outs:
     - path: eval/metrics.json
       hash: md5
-      md5: 3e85d28d9c67bf38c741f48c7d3446c5
+      md5: 80d81a2a616a6fb3f04ff4e8f5523d6b
       size: 125
   infer:
     cmd: python src/infer.py
     deps:
     - path: model/train_data.json
       hash: md5
-      md5: d3684b1ecd3c99debdea5591e99c25e2
+      md5: 21ab3af93de0eca245f24489be3c9982
       size: 189
     - path: src/infer.py
       hash: md5
-      md5: b61a3677bce8ff628d47340e10d3c47d
-      size: 2449
+      md5: f3e88fedb551157e07d35721c17a70ce
+      size: 2573
     outs:
     - path: plot/infer/one.png
       hash: md5
-      md5: 4be8f8e3902489f7615de88f89001d00
-      size: 1466653
+      md5: 6ec24be8a951f6b4cf27cc9c4ee4636b
+      size: 1340921
     - path: plot/infer/three.png
       hash: md5
-      md5: 254e789d62380a62ed6661a055c01277
-      size: 1412606
+      md5: 3d4e51754d37897a2c72c3a2a4d504e6
+      size: 1475131
     - path: plot/infer/two.png
       hash: md5
-      md5: 3ba4cde7955a020b6bf18aac138b9b90
-      size: 1473353
+      md5: c6c17228791b3a981e7ef28c59c8691a
+      size: 1470414

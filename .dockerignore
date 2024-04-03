@@ -1,0 +1,8 @@
+sam_vit*
+dataset/data
+eval
+model
+split
+.dvc/cache
+.dvc/tmp
+
