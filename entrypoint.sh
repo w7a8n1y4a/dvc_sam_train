@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /app
+git pull
 cd ./dataset/data
 ls -la
 cd /app
