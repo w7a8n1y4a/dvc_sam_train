@@ -9,7 +9,6 @@ class BaseConfig:
     app_path = os.path.abspath(os.getcwd())
     MFR_URL = os.environ.get('MFR_URL', None)
     MFR_AUTH_TOKEN = os.environ.get('MFR_AUTH_TOKEN', None)
-    CI_COMMIT_BRANCH = os.environ.get('CI_COMMIT_BRANCH', None)
 
 
 settings = BaseConfig()

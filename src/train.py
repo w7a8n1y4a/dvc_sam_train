@@ -104,7 +104,7 @@ def main():
     params = yaml.safe_load(open("params.yaml"))["train"]
 
     mlflow.set_tracking_uri('https://mlflow-test.pepemoss.com')
-    exp_name = settings.CI_COMMIT_BRANCH
+    exp_name = current_branch_name()
     run_name = yaml.safe_load(open("params.yaml"))['variable']['run_name']
 
     # создание эксперимента по имени ветки
