@@ -1,0 +1,94 @@
+schema: '2.0'
+stages:
+  split:
+    cmd: python src/split.py
+    deps:
+    - path: dataset/data
+      hash: md5
+      md5: 735891fde4a4ef0c09856aa32e83a8b5.dir
+      size: 805843468
+      nfiles: 40
+    - path: src/split.py
+      hash: md5
+      md5: 03114f5bbe1dea1bf60e113a44bc693d
+      size: 2642
+    params:
+      params.yaml:
+        split.box_size: 1800
+        split.overlap: 0.1
+        split.shuffle_dataset: false
+        split.test_path: split/test
+        split.test_size: 1
+        split.train_path: split/train
+        split.train_size: 1
+    outs:
+    - path: split/dataset_data.json
+      hash: md5
+      md5: bf242be7127edbd0f42dbc07306e4d42
+      size: 117
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: split/dataset_data.json
+      hash: md5
+      md5: bf242be7127edbd0f42dbc07306e4d42
+      size: 117
+    - path: src/train.py
+      hash: md5
+      md5: 3024cf020179c7077afd94bf1a1ddb65
+      size: 4427
+    params:
+      params.yaml:
+        train.batch: 1
+        train.epochs: 10
+        train.start_model_name: sam_vit_b_01ec64.pth
+        variable.run_name: alpha
+    outs:
+    - path: model/train_data.json
+      hash: md5
+      md5: bfaaf247f819224b0f342126ae40cf26
+      size: 189
+    - path: plot/train/loss_scores_dict.json
+      hash: md5
+      md5: 6f1d17d3e55fb82fc5befeced02d3f26
+      size: 1070
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: model/train_data.json
+      hash: md5
+      md5: bfaaf247f819224b0f342126ae40cf26
+      size: 189
+    - path: src/evaluate.py
+      hash: md5
+      md5: 7adc5372d5fb4238f28b1248b0f244c4
+      size: 3461
+    outs:
+    - path: eval/metrics.json
+      hash: md5
+      md5: 25a61a44f6ef1ecc7cf0d99f9990966f
+      size: 125
+  infer:
+    cmd: python src/infer.py
+    deps:
+    - path: model/train_data.json
+      hash: md5
+      md5: bfaaf247f819224b0f342126ae40cf26
+      size: 189
+    - path: src/infer.py
+      hash: md5
+      md5: f3e88fedb551157e07d35721c17a70ce
+      size: 2573
+    outs:
+    - path: plot/infer/one.png
+      hash: md5
+      md5: d0aa7922bd8fd4b6a0404d040264f120
+      size: 1387278
+    - path: plot/infer/three.png
+      hash: md5
+      md5: 8a79fa875f9918d927432727f34b769b
+      size: 1359140
+    - path: plot/infer/two.png
+      hash: md5
+      md5: 660c373a4cbe448ea44c1348d3b6293b
+      size: 1379930
