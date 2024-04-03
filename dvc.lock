@@ -35,8 +35,8 @@ stages:
       size: 117
     - path: src/train.py
       hash: md5
-      md5: 115f7254b0fed0965a1fbd83128875e8
-      size: 4431
+      md5: 3024cf020179c7077afd94bf1a1ddb65
+      size: 4427
     params:
       params.yaml:
         train.batch: 1
@@ -46,18 +46,18 @@ stages:
     outs:
     - path: model/train_data.json
       hash: md5
-      md5: 7ebe6b716b43b605383a0064aadc56d1
+      md5: 6237207760130a8639188c59546a8f1e
       size: 189
     - path: plot/train/loss_scores_dict.json
       hash: md5
-      md5: 3d4ab7c45d240d7632f150ed3c9ccfb5
+      md5: 05c8fc711f26ae110a1c3b4c550d8bba
       size: 1072
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: model/train_data.json
       hash: md5
-      md5: 7ebe6b716b43b605383a0064aadc56d1
+      md5: 6237207760130a8639188c59546a8f1e
       size: 189
     - path: src/evaluate.py
       hash: md5
@@ -66,14 +66,14 @@ stages:
     outs:
     - path: eval/metrics.json
       hash: md5
-      md5: 460471c731428d0c71cda5b9aa7869c9
+      md5: d7c254337006113ce3dd1dfbbab4c5bb
       size: 126
   infer:
     cmd: python src/infer.py
     deps:
     - path: model/train_data.json
       hash: md5
-      md5: 7ebe6b716b43b605383a0064aadc56d1
+      md5: 6237207760130a8639188c59546a8f1e
       size: 189
     - path: src/infer.py
       hash: md5
@@ -82,13 +82,13 @@ stages:
     outs:
     - path: plot/infer/one.png
       hash: md5
-      md5: 445e85515dbd200d43e32571ad1ca46d
-      size: 1455985
+      md5: eaa3cdba1241f5fc39f5f90e29fd1cce
+      size: 1535114
     - path: plot/infer/three.png
       hash: md5
-      md5: fd2348a0e986dc112f2a7e8195d61d93
-      size: 1455860
+      md5: cc7c2fb0974d0f9d401028354c826e8b
+      size: 1379113
     - path: plot/infer/two.png
       hash: md5
-      md5: e19e6f6cb9e17734d993c4e51941f034
-      size: 1355099
+      md5: 890b48a0b69f93b6bd7a7247bff2652e
+      size: 1544157
