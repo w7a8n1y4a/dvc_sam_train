@@ -37,6 +37,7 @@ The project use python poetry.
 pip install poetry
 ```
 
+
 To install the dependencies use:
 ```bash
 poetry config virtualenvs.in-project false
