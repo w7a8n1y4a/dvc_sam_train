@@ -31,4 +31,4 @@ exp:experiment:
     - echo $USER
     - echo $PROJ
   script:
-    - docker run -it --gpus all -v /home/w7a8n1y4a/Documents/datasets/ice_edge_bachelor:/app/dataset/data -v $DVC_ENV_FILE:/app/.dvc/config.local --env-file $ENV_FILE --name $PROJ $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    - docker run -d --gpus all -v /home/w7a8n1y4a/Documents/datasets/ice_edge_bachelor:/app/dataset/data -v $DVC_ENV_FILE:/app/.dvc/config.local --env-file $ENV_FILE --name $PROJ $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
