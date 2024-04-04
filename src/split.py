@@ -17,15 +17,13 @@ def split(params, images_path, masks_path) -> int:
     images_path_list.sort()
     masks_path_list.sort()
 
-    img_mask_list = [
-        item for item in zip(images_path_list, masks_path_list)
-    ]
+    img_mask_list = [item for item in zip(images_path_list, masks_path_list)]
 
     if params['shuffle_dataset']:
         random.shuffle(img_mask_list)
 
-    train_list = img_mask_list[:int(len(img_mask_list)*params['train_size']/100)]
-    test_list = img_mask_list[-int(len(img_mask_list)*params['test_size']/100):]
+    train_list = img_mask_list[: int(len(img_mask_list) * params['train_size'] / 100)]
+    test_list = img_mask_list[-int(len(img_mask_list) * params['test_size'] / 100) :]
 
     create_dirs(
         [
@@ -47,8 +45,8 @@ def split(params, images_path, masks_path) -> int:
 
     return len(img_mask_list)
 
-def main() -> None:
 
+def main() -> None:
     # параметры сплита
     params = yaml.safe_load(open("params.yaml"))["split"]
 
@@ -71,9 +69,7 @@ def main() -> None:
     shutil.rmtree('tmp/masks')
 
     dataset_yaml_dict = {
-        'data_hashes': [
-            checksumdir.dirhash(f'{settings.app_path}/split/{item}', 'md5') for item in ['train', 'test']
-        ]
+        'data_hashes': [checksumdir.dirhash(f'{settings.app_path}/split/{item}', 'md5') for item in ['train', 'test']]
     }
 
     dict_to_json_file_save(dataset_yaml_dict, './split/dataset_data.json')

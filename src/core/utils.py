@@ -23,7 +23,7 @@ def show_mask(mask: np.array, ax, random_color=False):
     if random_color:
         color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
     else:
-        color = np.array([30/255, 144/255, 255/255, 0.6])
+        color = np.array([30 / 255, 144 / 255, 255 / 255, 0.6])
     h, w = mask.shape[:2]
     mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
     ax.imshow(mask_image)
@@ -38,7 +38,7 @@ def plot_image_mask(image: PIL.Image, mask: PIL.Image, filename: str):
     axes.axis("off")
     plt.savefig("./plots/" + filename + ".jpg")
     plt.close()
-    
+
 
 def plot_image_mask_dataset(dataset: torch.utils.data.Dataset, idx: int):
     image_path = dataset.img_files[idx]
@@ -50,38 +50,38 @@ def plot_image_mask_dataset(dataset: torch.utils.data.Dataset, idx: int):
 
 
 def get_bounding_box(ground_truth_map: np.array) -> list:
-  idx = np.where(ground_truth_map > 0)
+    idx = np.where(ground_truth_map > 0)
 
-  x_indices = idx[1]
-  y_indices = idx[0]
+    x_indices = idx[1]
+    y_indices = idx[0]
 
-  try:
-      x_min, x_max = np.min(x_indices), np.max(x_indices)
-      y_min, y_max = np.min(y_indices), np.max(y_indices)
-      # add perturbation to bounding box coordinates
-      H, W = ground_truth_map.shape
-      x_min = max(0, x_min - np.random.randint(0, 20))
-      x_max = min(W, x_max + np.random.randint(0, 20))
-      y_min = max(0, y_min - np.random.randint(0, 20))
-      y_max = min(H, y_max + np.random.randint(0, 20))
-  except:
-      x_min = 0
-      x_max = 0
-      y_min = 0
-      y_max = 0
+    try:
+        x_min, x_max = np.min(x_indices), np.max(x_indices)
+        y_min, y_max = np.min(y_indices), np.max(y_indices)
+        # add perturbation to bounding box coordinates
+        H, W = ground_truth_map.shape
+        x_min = max(0, x_min - np.random.randint(0, 20))
+        x_max = min(W, x_max + np.random.randint(0, 20))
+        y_min = max(0, y_min - np.random.randint(0, 20))
+        y_max = min(H, y_max + np.random.randint(0, 20))
+    except:
+        x_min = 0
+        x_max = 0
+        y_min = 0
+        y_max = 0
 
-  bbox = [x_min, y_min, x_max, y_max]
+    bbox = [x_min, y_min, x_max, y_max]
 
-  return bbox
+    return bbox
 
 
 def stacking_batch(batch, outputs):
-
     stk_gt = torch.stack([b["ground_truth_mask"] for b in batch], dim=0)
     stk_out = torch.stack([out["low_res_logits"] for out in outputs], dim=0)
     iou = torch.stack([out["iou_predictions"] for out in outputs], dim=0)
 
     return stk_gt, stk_out, iou
+
 
 def create_dirs(dirs_paths: list[str]):
     """Функция создания дирректорий

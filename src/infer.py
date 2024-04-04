@@ -15,7 +15,6 @@ from core.config import settings
 
 
 def infer(model, params, image_path, filename, mask_path=None):
-
     image = Image.open(image_path)
     four = Image.open('random_image.png')
 
@@ -27,13 +26,13 @@ def infer(model, params, image_path, filename, mask_path=None):
     predictor.set_image(np.array(image))
     masks, iou_pred, low_res_iou = predictor.predict(
         box=np.array(box),
-        multimask_output=False, 
+        multimask_output=False,
     )
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 20))
 
     draw = ImageDraw.Draw(image)
-    draw.rectangle(box, outline ="red")
+    draw.rectangle(box, outline="red")
     ax1.imshow(image)
     ax1.set_title(f"Original image + Bounding box: {filename}")
 
@@ -81,12 +80,14 @@ def main():
             params,
             f"split/test/images/{item.split('/')[-1]}",
             name,
-            mask_path=f"split/test/masks/{item.split('/')[-1]}"
+            mask_path=f"split/test/masks/{item.split('/')[-1]}",
         )
 
         utils.dict_to_log({'name': name, 'img_name': item})
 
-        utils.dict_to_log({'send_succes': str(utils.send_file_to_telegram(f"{settings.app_path}/plot/infer/{name}.png"))})
+        utils.dict_to_log(
+            {'send_succes': str(utils.send_file_to_telegram(f"{settings.app_path}/plot/infer/{name}.png"))}
+        )
 
 
 if __name__ == "__main__":

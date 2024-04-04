@@ -16,7 +16,6 @@ params = yaml.safe_load(open("params.yaml"))["split"]
 
 
 def split_img_box(uuid: str, img, output_dir: str, width: int, height: int, overlap: float):
-
     rows = int((img.shape[0] / (height - height * overlap)))
     cols = int((img.shape[1] / (width - width * overlap)))
 
@@ -25,7 +24,7 @@ def split_img_box(uuid: str, img, output_dir: str, width: int, height: int, over
             x = int(j * (width - width * overlap))
             y = int(i * (height - height * overlap))
 
-            crop_img = img[y:y+height, x:x+width]
+            crop_img = img[y : y + height, x : x + width]
 
             if crop_img.shape[0] == height and crop_img.shape[1] == width:
                 output_image_path = os.path.join(output_dir, f'{str(uuid)}_{i}_{j}.png')
@@ -33,21 +32,20 @@ def split_img_box(uuid: str, img, output_dir: str, width: int, height: int, over
 
 
 def split_img_devider(uuid: str, img, output_dir: str, devider: int, overlap: float):
+    devider_overlap = int(devider / overlap)
 
-    devider_overlap = int(devider/overlap)
+    height = int(img.shape[0] / devider)
+    width = int(img.shape[1] / devider)
 
-    height = int(img.shape[0]/devider)
-    width = int(img.shape[1]/devider)
-
-    cols = int(img.shape[0] / (img.shape[0]/devider_overlap))
-    rows = int(img.shape[1] / (img.shape[1]/devider_overlap))
+    cols = int(img.shape[0] / (img.shape[0] / devider_overlap))
+    rows = int(img.shape[1] / (img.shape[1] / devider_overlap))
 
     for i in range(cols):
         for j in range(rows):
             x = int(j * (width - width * overlap))
             y = int(i * (height - height * overlap))
 
-            crop_img = img[y:y+height, x:x+width]
+            crop_img = img[y : y + height, x : x + width]
 
             if crop_img.shape[0] == height and crop_img.shape[1] == width:
                 output_image_path = os.path.join(output_dir, f'{str(uuid)}_{i}_{j}.png')
@@ -55,18 +53,17 @@ def split_img_devider(uuid: str, img, output_dir: str, devider: int, overlap: fl
 
 
 def mask_gen(filepath: str) -> str:
-    
-    img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)                                                                          
+    img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
     assert img is not None
-                                                                                                                              
-    img = cv2.medianBlur(img, 5)                                                                                               
-    ret, th1 = cv2.threshold(img, numpy.median(img), 255, cv2.THRESH_BINARY)                                                     
-    
+
+    img = cv2.medianBlur(img, 5)
+    ret, th1 = cv2.threshold(img, numpy.median(img), 255, cv2.THRESH_BINARY)
+
     img_md5 = hashlib.md5(filepath.split('/')[-1].encode()).hexdigest()
 
     cv2.imwrite(f'img/{img_md5}.png', img)
     cv2.imwrite(f'mask/{img_md5}.png', th1)
-    
+
     dict_to_log({'start': str(img_md5)})
 
     split_img_box(img_md5, img, 'tmp/images', params['box_size'], params['box_size'], params['overlap'])
@@ -84,7 +81,6 @@ def worker(jobs, results) -> None:
 
 
 def start_jobs(procs, jobs, results, images_path):
-
     for item in images_path:
         jobs.put(item)
     for _ in range(procs):
@@ -94,7 +90,6 @@ def start_jobs(procs, jobs, results, images_path):
 
 
 def get_uuid_images(images_path, results):
-
     uuid_images = []
     procs_done = 0
     while procs_done < len(images_path):
@@ -112,7 +107,6 @@ def get_uuid_images(images_path, results):
 
 
 def gen_dataset(path_img, path_mask) -> list[str]:
-   
     try:
         shutil.rmtree(path_img)
     except:

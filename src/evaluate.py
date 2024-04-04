@@ -18,7 +18,6 @@ from lora import LoRA_sam
 
 
 def evaluate(model_name: str) -> dict:
-
     params = yaml.safe_load(open("params.yaml"))["train"]
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -40,8 +39,7 @@ def evaluate(model_name: str) -> dict:
         total_loss = []
         total_iou = []
         for i, batch in enumerate(tqdm(test_dataloader)):
-            outputs = model(batched_input=batch,
-                            multimask_output=False)
+            outputs = model(batched_input=batch, multimask_output=False)
 
             gt_mask_tensor = batch[0]["ground_truth_mask"].unsqueeze(0).unsqueeze(0)
             loss = seg_loss(outputs[0]["low_res_logits"], gt_mask_tensor.float().to(device))
@@ -69,7 +67,6 @@ def main():
     mlflow.set_tracking_uri('https://mlflow-test.pepemoss.com')
 
     with mlflow.start_run(run_id=train_data_dict['run_id']) as run:
-
         metrics = evaluate(train_data_dict['trained_model_name'])
 
         metrics = {'train': metrics}
@@ -86,7 +83,7 @@ def main():
         # загрузка модели в mlflow, работает только как ра
         shutil.copy(
             f'{settings.app_path}/model/{train_data_dict["trained_model_name"]}',
-            f'{settings.app_path}/model/best.safetensors'
+            f'{settings.app_path}/model/best.safetensors',
         )
         mlflow.log_artifact(f'{settings.app_path}/model/best.safetensors')
 

@@ -22,12 +22,13 @@ from core.config import settings
 
 
 def train(params: dict):
-
     if not os.path.isfile(f"./{params['start_model_name']}"):
         try:
             r = httpx.get(f"https://dl.fbaipublicfiles.com/segment_anything/{params['start_model_name']}", timeout=20)
         except:
-            dict_to_log({'model_load_failed': f"https://dl.fbaipublicfiles.com/segment_anything/{params['start_model_name']}"})
+            dict_to_log(
+                {'model_load_failed': f"https://dl.fbaipublicfiles.com/segment_anything/{params['start_model_name']}"}
+            )
 
         with open(f"./{params['start_model_name']}", 'wb') as f:
             f.write(r.content)
@@ -60,8 +61,7 @@ def train(params: dict):
         ious = []
 
         for i, batch in enumerate(tqdm(train_dataloader)):
-            outputs = model(batched_input=batch,
-                            multimask_output=False)
+            outputs = model(batched_input=batch, multimask_output=False)
 
             stk_gt, stk_out, iou = utils.stacking_batch(batch, outputs)
             stk_out = stk_out.squeeze(1)
@@ -83,10 +83,7 @@ def train(params: dict):
 
         dict_to_log(epoch_dict)
 
-    dict_to_json_file_save(
-        {'train': loss_scores_list},
-        f'{settings.app_path}/plot/train/loss_scores_dict.json'
-    )
+    dict_to_json_file_save({'train': loss_scores_list}, f'{settings.app_path}/plot/train/loss_scores_dict.json')
 
     run_name = yaml.safe_load(open("params.yaml"))['variable']['run_name']
 
@@ -127,7 +124,7 @@ def main():
             'trained_model_name': model_name,
             'trained_model_md5': filepath_to_md5(model_path + model_name),
             'run_id': run.info.run_id,
-            'train_time': round(end_time - start_time, 2)
+            'train_time': round(end_time - start_time, 2),
         }
 
         dict_to_log(train_dict)
