@@ -30,7 +30,7 @@ def infer(model, params, image_path, filename, mask_path=None):
         multimask_output=False, 
     )
 
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex=True, sharey=True, figsize=(15, 15))
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 20))
 
     draw = ImageDraw.Draw(image)
     draw.rectangle(box, outline ="red")
