@@ -31,4 +31,5 @@ exp:experiment:
     - echo $USER
     - echo $PROJ
   script:
+    - docker rm $PROJ || echo $?
     - docker run -d --gpus all -e CI_COMMIT_BRANCH=$CI_COMMIT_BRANCH -v /home/w7a8n1y4a/Documents/datasets/ice_edge_bachelor:/sam_train/dataset/data -v $DVC_ENV_FILE:/sam_train/.dvc/config.local --env-file $ENV_FILE --name $PROJ $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG

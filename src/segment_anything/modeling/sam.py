@@ -14,6 +14,7 @@ from .image_encoder import ImageEncoderViT
 from .mask_decoder import MaskDecoder
 from .prompt_encoder import PromptEncoder
 
+
 class Sam(nn.Module):
     mask_threshold: float = 0.0
     image_format: str = "RGB"
@@ -114,13 +115,12 @@ class Sam(nn.Module):
                 multimask_output=multimask_output,
             )
 
-
             masks = self.postprocess_masks(
                 low_res_masks,
                 input_size=image_record["image"].shape[-2:],
                 original_size=image_record["original_size"],
             )
-            
+
             low_res_mask_reshaped = masks
             masks = masks > self.mask_threshold
             outputs.append(

@@ -8,6 +8,7 @@ from safetensors import safe_open
 from safetensors.torch import save_file
 import yaml
 
+
 class LoRA_qkv(nn.Module):
     """
     LoRA adaption for attention modules. Only for queries and values
@@ -24,14 +25,13 @@ class LoRA_qkv(nn.Module):
     """
 
     def __init__(
-            self,
-            qkv,
-            linear_a_q: nn.Module,
-            linear_b_q: nn.Module,
-            linear_a_v: nn.Module,
-            linear_b_v: nn.Module,
+        self,
+        qkv,
+        linear_a_q: nn.Module,
+        linear_b_q: nn.Module,
+        linear_a_v: nn.Module,
+        linear_b_v: nn.Module,
     ):
-        
         super(LoRA_qkv, self).__init__()
         self.qkv = qkv
         self.linear_a_q = linear_a_q
@@ -45,8 +45,8 @@ class LoRA_qkv(nn.Module):
         qkv = self.qkv(x)
         q_ba = self.linear_b_q(self.linear_a_q(x))
         v_ba = self.linear_b_v(self.linear_a_v(x))
-        qkv[:, :, :, :self.d_model] += q_ba #q part
-        qkv[:, :, :, -self.d_model:] += v_ba #v part
+        qkv[:, :, :, : self.d_model] += q_ba  # q part
+        qkv[:, :, :, -self.d_model :] += v_ba  # v part
 
         return qkv
 
@@ -59,7 +59,7 @@ class LoRA_sam(nn.Module):
         sam_model: Sam class of the segment anything model
         rank: Rank of the matrix for LoRA
         lora_layer: List of weights exisitng for LoRA
-    
+
     Return:
         None
 
@@ -76,7 +76,7 @@ class LoRA_sam(nn.Module):
         else:
             # In each block, you have an attention block => total blocks -> nb lora layers
             self.lora_layer = list(range(len(sam_model.image_encoder.blocks)))
-        
+
         self.A_weights = []
         self.B_weights = []
 
@@ -96,25 +96,17 @@ class LoRA_sam(nn.Module):
             w_b_linear_q = nn.Linear(self.rank, self.d_model, bias=False)
             w_a_linear_v = nn.Linear(self.d_model, self.rank, bias=False)
             w_b_linear_v = nn.Linear(self.rank, self.d_model, bias=False)
-            
 
             self.A_weights.append(w_a_linear_q)
             self.B_weights.append(w_b_linear_q)
             self.A_weights.append(w_a_linear_v)
             self.B_weights.append(w_b_linear_v)
 
-            blk.attn.qkv = LoRA_qkv(
-                w_qkv_linear,
-                w_a_linear_q,
-                w_b_linear_q,
-                w_a_linear_v,
-                w_b_linear_v
-            )
+            blk.attn.qkv = LoRA_qkv(w_qkv_linear, w_a_linear_q, w_b_linear_q, w_a_linear_v, w_b_linear_v)
 
         self.reset_parameters()
         self.sam = sam_model
         self.lora_vit = sam_model.image_encoder
-
 
     def reset_parameters(self):
         """
@@ -126,14 +118,13 @@ class LoRA_sam(nn.Module):
         for w_B in self.B_weights:
             nn.init.zeros_(w_B.weight)
 
-
     def save_lora_parameters(self, filename: str):
         """
         Save the LoRA wieghts applied to the attention model as safetensors.
 
         Arguments:
             filenmame: Name of the file that will be saved
-        
+
         Return:
             None: Saves a safetensors file
         """
@@ -144,14 +135,13 @@ class LoRA_sam(nn.Module):
         merged_dict = {**a_tensors, **b_tensors}
         save_file(merged_dict, filename)
 
-
     def load_lora_parameters(self, filename: str):
         """
         Load a safetensor file of LoRA weights for the attention modules
 
         Arguments:
             filename: Name of the file containing the saved weights
-        
+
         Return:
             None: Loads the weights to the LoRA_sam class
         """

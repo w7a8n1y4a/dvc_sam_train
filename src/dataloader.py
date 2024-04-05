@@ -16,8 +16,8 @@ class DatasetSegmentation(Dataset):
 
     Arguments:
         folder_path (str): The path of the folder containing the images
-        processor (obj): Samprocessor class that helps pre processing the image, and prompt 
-    
+        processor (obj): Samprocessor class that helps pre processing the image, and prompt
+
     Return:
         (dict): Dictionnary with 4 keys (image, original_size, boxes, ground_truth_mask)
             image: image pre processed to 1024x1024 size
@@ -36,12 +36,12 @@ class DatasetSegmentation(Dataset):
 
     def __len__(self):
         return len(self.img_files)
-    
+
     def __getitem__(self, index: int) -> list:
         img_path = self.img_files[index]
         mask_path = self.mask_files[index]
         # get image and mask in PIL format
-        image =  Image.open(img_path)
+        image = Image.open(img_path)
         mask = Image.open(mask_path)
         mask = mask.convert('1')
         ground_truth_mask = np.array(mask)
@@ -61,7 +61,7 @@ def collate_fn(batch: torch.utils.data) -> list:
 
     Arguments:
         batch: The batched dataset
-    
+
     Return:
         (list): list of batched dataset so a list(dict)
     """
