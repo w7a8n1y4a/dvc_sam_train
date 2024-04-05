@@ -5,7 +5,7 @@ split:
   test_size: 2
   shuffle_dataset: True
   box_size: 1024
-  overlap: 0.4
+  overlap: 0.5
 variable:
   run_name: 'alpha'
 train:
