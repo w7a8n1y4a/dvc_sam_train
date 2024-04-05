@@ -1,5 +1,7 @@
 # Обучение SAM c использованием LoRa
 
+## Репозиторий [Backend](https://git.pepemoss.com/universitat/ml/sam_train_backend.git) - интеграция модели 
+
 ## Базовые настройки для разработки
 
 0. Интерпретатор `>=3.10,<3.13`
