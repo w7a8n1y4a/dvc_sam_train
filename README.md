@@ -13,7 +13,8 @@
 
 0. Установить `poetry install`
 1. Войти в окружение `poetry shell`
-2. `dvc repro`
+2. `dvc pull`
+3. `dvc repro`
 
 ## Датасет
 
