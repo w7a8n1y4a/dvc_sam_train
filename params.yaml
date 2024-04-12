@@ -1,15 +1,15 @@
 split:
   test_path: 'split/test'
   train_path: 'split/train'
-  train_size: 20
-  test_size: 2
+  train_size: 50
+  test_size: 7
   shuffle_dataset: True
   box_size: 1024
   overlap: 0.2
 variable:
   run_name: 'alpha'
 train:
-  epochs: 100
+  epochs: 50
   batch: 1
   learning_rate: 0.0001
   start_model_name: 'sam_vit_b_01ec64.pth'
