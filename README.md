@@ -1,5 +1,7 @@
 # Обучение SAM c использованием LoRa
 
+## Конфигурации [Nginx](https://git.pepemoss.com/config/all/-/tree/master/nginx/main?ref_type=heads) для зависимостей
+
 ## Репозиторий [Backend](https://git.pepemoss.com/universitat/ml/sam_train_backend.git) - интеграция модели 
 
 ## Базовые настройки для разработки
